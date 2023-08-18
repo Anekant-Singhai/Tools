@@ -1,0 +1,6 @@
+httpx
+tld
+Chaos-Python-Client==1.0.0
+tldextract
+requests
+pandas
