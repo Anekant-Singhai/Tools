@@ -2,11 +2,11 @@
 
 
 # code for httpx
-!pip install httpx
-!pip install tld
-!pip3 install Chaos-Python-Client==1.0.0
-!pip install tldextract
-!pip install requests
+#!pip install httpx
+#!pip install tld
+#!pip3 install Chaos-Python-Client==1.0.0
+#!pip install tldextract
+#!pip install requests
 # !pip install selenium
 # !pip install chromedriver_autoinstaller
 
@@ -234,7 +234,7 @@ print("Subdomains segregation completed")
 # start vulnerability assesment via machine learning -> XSS
 
 """# Futile attempts of httpx implement"""
-
+'''
 import httpx
 import tldextract
 import requests
@@ -321,6 +321,7 @@ with open('./results/active_urls.txt', 'r') as f:
 # Step 3: Check if the domains are active and save the active domains to a file
 
 '''
+'''
 Use asynchronous requests: Consider using asynchronous HTTP requests with httpx.AsyncClient.
 Asynchronous requests can help to speed up the process and handle multiple requests concurrently.
 for encountering is a "TimeoutError: The read operation timed out." It indicates that the HTTP request
@@ -328,7 +329,7 @@ to check the active status of a domain is taking too long to complete, and the c
 
 
 '''
-
+'''
 import httpx
 import tld
 from tld import get_fld
@@ -408,4 +409,4 @@ with open('./results/active_urls.txt', 'r') as f:
         print(line.strip())  # Use strip() to remove the newline character
 
 with open("/results/")
-
+'''
