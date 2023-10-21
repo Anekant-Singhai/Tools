@@ -1,16 +1,4 @@
 
-
-
-# code for httpx
-#!pip install httpx
-#!pip install tld
-#!pip3 install Chaos-Python-Client==1.0.0
-#!pip install tldextract
-#!pip install requests
-# !pip install selenium
-# !pip install chromedriver_autoinstaller
-
-#os.system("rm -r results")
 ############################################################################### UPDATED CODE:
 import pandas as pd
 import re
@@ -21,14 +9,16 @@ import os
 os.system("rm -rf results")
 os.system("mkdir results")
 
-data = pd.read_csv(input("The csv file(with path) please: "))
-key = input("your chaos api key please, if you don't have you can get it for free from chaos: ")
+data = pd.read_csv(input("The csv file: "))
+key = input("The Chaos API key please , if not you can get it for free on [https://chaos.projectdiscovery.io/#/]: ")
 options = "default"
 
-print("###################### ELIGIBLE DOMAINS ###################\n")
+print("###################### ALL ELIGIBLES  ###################\n")
 # Step 1: Extract domains eligible for bounty from the CSV file and save them to a file
 eligible_identifiers_url = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'URL') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
 eligible_identifiers_other = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'OTHER') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
+eligible_identifiers_code = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'SOURCE_CODE') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
+eligible_identifiers_smart_contracts = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'SMART_CONTRACT') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
 
 if eligible_identifiers_url:
     with open("./results/eligible_urls.txt", "a") as f:
@@ -39,8 +29,21 @@ else:
     print("No eligible identifiers found.")
 
 if eligible_identifiers_other:
+    print("----------[OTHERS]-------------------- ")
     with open("./results/eligible_others.txt", "a") as f:
         for i in eligible_identifiers_other:
+            print(i)
+            f.write(i + "\n")
+if eligible_identifiers_code:
+    print("----------[CODE REVIEW]---------------")
+    with open("./results/eligible_code.txt", "a") as f:
+        for i in eligible_identifiers_code:
+            print(i)
+            f.write(i + "\n")
+if eligible_identifiers_smart_contracts:
+    print("--------------[SMART CONTRACTS]------------------------")
+    with open("./results/eligible_smart_contracts.txt", "a") as f:
+        for i in eligible_identifiers_smart_contracts:
             print(i)
             f.write(i + "\n")
 print("############### WILDCARDS #################\n")
@@ -199,7 +202,26 @@ keywords = {
     "payment": "./results/subdomains_segregated/payment_subdomains.txt",
     "auth": "./results/subdomains_segregated/auth_subdomains.txt",
     "signup": "./results/subdomains_segregated/signup_subdomains.txt",
-    "admin": "./results/subdomains_segregated/admin_subdomains.txt"
+    "admin": "./results/subdomains_segregated/admin_subdomains.txt",
+    "freelance": "./results/subdomains_segregated/freelance_subdomains.txt",
+    "service": "./results/subdomains_segregated/service_subdomains.txt",
+    "network": "./results/subdomains_segregated/network_subdomains.txt",
+    "contract": "./results/subdomains_segregated/contracts_subdomains.txt",
+    "blog":"./results/subdomains_segregated/blog_subdomains.txt",
+    "storage":"./results/subdomains_segregated/storage_subdomains.txt",
+    "support":"./results/subdomains_segregated/support_subdomains.txt",
+    "cloud":"./results/subdomains_segregated/cloud_subdomains.txt",
+    "account":"./results/subdomains_segregated/account_subdomains.txt",
+    "commerce":"./results/subdomains_segregated/commerce_subdomains.txt",
+    "customer":"./results/subdomains_segregated/customer_subdomains.txt",
+    "consumer":"./results/subdomains_segregated/consumer_subdomains.txt",
+    "sandbox":"./results/subdomains_segregated/sandbox_subdomains.txt",
+    "public":"./results/subdomains_segregated/public_subdomains.txt",
+    "asset":"./results/subdomains_segregated/asset_subdomains.txt",
+
+
+
+
     # You can add more keywords and file names here
 }
 
@@ -226,187 +248,5 @@ for subdomain in subdomains:
 # Print a message indicating completion
 print("Subdomains segregation completed")
 
-# Now we need to check which ones are live in subdomains too
-# integrate wabackurls
-# integrate crtsh and other passive tools
-# integrate subfinder and amass
-# start the new subdomain notify as soon as it comes
-# start vulnerability assesment via machine learning -> XSS
-
-"""# Futile attempts of httpx implement"""
-'''
-import httpx
-import tldextract
-import requests
 
 
-
-from selenium import webdriver
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from google.colab import drive
-drive.mount('/content/drive')
-driver_path = '/content/drive/MyDrive/selenium-4.11.2/selenium/webdriver/chrome/'
-driver = webdriver.Chrome(executable_path=driver_path)
-driver.get('https://www.google.com')
-print(driver.title)
-driver.close()
-
-
-
-def check_redirects(url, max_redirects=5, timeout=10):
-    try:
-        redirects = 0
-        while redirects < max_redirects:
-            if not url.startswith("http://") and not url.startswith("https://"):
-                #print(f"for url: {url}\n")
-                url = "https://" + url  # Add 'https://' protocol prefix if missing
-            #print(f"for url: {url}\n")
-            print("here1")
-            print(url)
-            response = httpx.get(url, verify=False, timeout=timeout)
-            print("here2")
-            if response.status_code == 200:
-                print("here3")
-                return url
-
-            elif response.is_redirect:  # Enable redirection handling
-                print("here4")
-                url = response.headers['location']
-                redirects += 1
-            else:
-                print("here5")
-                return None
-        return None
-    except httpx.ConnectError as e:
-        print("here6")
-        print(f"Error connecting to {url}: {e}")
-        return None
-    except tld.exceptions.TldDomainNotFound:
-        print("here7")
-        return(f"Domain not found! {url}")
-        #return np.nan
-
-
-active_urls = []
-with open('./results/active_urls.txt', 'a') as f:
-  print("####### checking urls ##########\n")
-  for domain in domains:
-    print(f"domain: {domain}")
-    active_url = check_redirects(domain)
-    if active_url:
-      active_urls.append(active_url)
-print(active_urls)
-
-active_urls = []
-with open('./results/active_urls.txt', 'a') as f:
-    print("################# checking for urls: \n")
-    for domain in domains:
-        print(f"for domain {domain}\n")
-        active_url = check_redirects(domain)
-        print("active url: ",active_url)
-        if active_url:
-            f.write(active_url + '\n')
-            res = get_tld(active_url, as_object=True)
-            active_urls.append(res.fld)
-
-print("####################################### ACTIVE DOMAINS and URLS: ###################################\n")
-# Print the active domains from the file
-with open('./results/active_urls.txt', 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        print(line.strip())  # Use strip() to remove the newline character
-
-
-# Step 3: Check if the domains are active and save the active domains to a file
-
-'''
-'''
-Use asynchronous requests: Consider using asynchronous HTTP requests with httpx.AsyncClient.
-Asynchronous requests can help to speed up the process and handle multiple requests concurrently.
-for encountering is a "TimeoutError: The read operation timed out." It indicates that the HTTP request
-to check the active status of a domain is taking too long to complete, and the connection is being closed prematurely.
-
-
-'''
-'''
-import httpx
-import tld
-from tld import get_fld
-import tldextract
-print(eligible_identifiers_url)
-def check_active(url,timeout=10):
-
-  try:
-
-    #while redirects < max_redirects:
-    if not url.startswith("http://") and not url.startswith("https://"):
-      print(f"for url: {url}\n")
-      url = "https://" + url  # Add 'https://' protocol prefix if missing
-    print(f"for url: {url}\n")
-    response = httpx.get(url,verify=False,timeout=timeout)
-    if response.status_code == 200:
-      return url
-    elif response.status_code in range(300,400):
-      return url
-    else:
-      return None
-  except httpx.ConnectError as e:
-      print(f"Error connecting to {url}: {e}")
-      return None
-  except httpx.TimeoutException as e:
-        print(f"Timeout occurred while connecting to {url}: {e}")
-        return None
-
-
-
-def check_redirects(url, max_redirects=5, timeout=10):
-    try:
-        redirects = 0
-        while redirects < max_redirects:
-            if not url.startswith("http://") and not url.startswith("https://"):
-                print(f"for url: {url}\n")
-                url = "https://" + url  # Add 'https://' protocol prefix if missing
-            print(f"for url: {url}\n")
-            response = httpx.get(url, verify=False, timeout=timeout)
-            if response.status_code == 200:
-                return url
-            elif response.is_redirect:  # Enable redirection handling
-                url = response.headers['location']
-                redirects += 1
-            else:
-                return None
-        return None
-    except httpx.ConnectError as e:
-        print(f"Error connecting to {url}: {e}")
-        return None
-    except tld.exceptions.TldBadUrl:
-        return (f"Bad url {url}")
-    except tld.exceptions.TldDomainNotFound:
-        return(f"Domain not found! {url}")
-        #return np.nan
-
-
-
-
-
-active_urls = []
-with open('./results/active_urls.txt', 'a') as f:
-    print("## checking for urls: \n")
-    for domain in domains:
-        active_url = check_active(domain)
-        print("active url: ",active_url)
-        if active_url:
-            f.write(active_url + '\n')
-            res = get_tld("https://"+active_url, as_object=True)
-            active_urls.append(res.fld)
-
-print("####################################### ACTIVE DOMAINS and URLS: ###################################\n")
-# Print the active domains from the file
-with open('./results/active_urls.txt', 'r') as f:
-    lines = f.readlines()
-    for line in lines:
-        print(line.strip())  # Use strip() to remove the newline character
-
-with open("/results/")
-'''
