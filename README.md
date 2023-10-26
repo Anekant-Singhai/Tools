@@ -18,9 +18,14 @@ Sit back and relax!
 
 
 ---
-# Link Snagger
+# Link Snagger {Link Extractor}
 ## What It Does
 Link Snagger is your go-to tool for extracting all the links present on a webpage. Say goodbye to the hassle of figuring out which button or element is clickable to access another page. This tool does the heavy lifting for you, making link extraction quick and easy.
+- find the relevant links embedded hidden in plain sight
+- get the js files which were used
+## Where to use
+When you need to find out the broken links which are now not being used
+as well as in the CTF scenarios which have many front-end functionalities and can't figure out what can be the links useful to visit to
 
 ---
 # cookie_stealer.py
