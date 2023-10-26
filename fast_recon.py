@@ -390,7 +390,7 @@ def banner_ip(banners, address, port):
     try:
         s.connect((address, port))
         if port == 80:
-            print("\n" + Fore.GREEN + "{'➣'*5} HTTP PROTOCOL Found" + Style.RESET_ALL + f" - IP: {address} | PORT: {port}\n")
+            print("\n" + Fore.GREEN + "[+] HTTP PROTOCOL Found" + Style.RESET_ALL + f" - IP: {address} | PORT: {port}\n")
             message = b"GET / HTTP/1.1\r\n\r\n"
             s.sendall(message)
         banner_data = s.recv(4096)
@@ -413,9 +413,9 @@ print("2. UDP")
 protocol_choice = int(input("Enter the protocol number (1 or 2): "))
 
 if protocol_choice == 1:
-    run_scanner(1000, int(input("Select a mode: 1 for 1024, 2 for 10000, 3 for common ports, 69 for all ,4 for custom: ")), socket.SOCK_STREAM)
+    run_scanner(200, int(input("Select a mode: 1 for 1024, 2 for 10000, 3 for common ports, 69 for all ,4 for custom: ")), socket.SOCK_STREAM)
 elif protocol_choice == 2:
-    run_scanner(1000, int(input("Select a mode: 1 for 1024, 2 for 10000, 3 for common ports, 4 for custom: ")), socket.SOCK_DGRAM)
+    run_scanner(200, int(input("Select a mode: 1 for 1024, 2 for 10000, 3 for common ports, 4 for custom: ")), socket.SOCK_DGRAM)
 else:
     print("Invalid protocol choice. Please select 1 or 2 for TCP or UDP.")
 
@@ -437,7 +437,6 @@ for banner in banners:
     print(Fore.CYAN + f"BANNER for IP: {banner[0][0]} | PORT: {banner[0][1]}" + Style.RESET_ALL)
     print(f"🏁  ->  \n {banner[1]}")
     print(f"         -------------------------------------------------------------------------------------------      \n")
-
 
 
 
