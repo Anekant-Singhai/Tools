@@ -18,7 +18,7 @@ Sit back and relax!
 
 
 ---
-# Link Snagger
+# Link Snagger {Link Extractor}
 ## What It Does
 Link Snagger is your go-to tool for extracting all the links present on a webpage. Say goodbye to the hassle of figuring out which button or element is clickable to access another page. This tool does the heavy lifting for you, making link extraction quick and easy.
 - find the relevant links embedded hidden in plain sight
@@ -59,5 +59,66 @@ This code appends your desired word to your wordlist at your specified position.
 
 ## Where to Use
 When there's a rate limit for a certain number of incorrect login attempts and it's reset by a correct login, you can bypass it by creating a wordlist with correct login credentials.
+
+---
+						
+						
+						
+# 								DELVE
+
+*Your own customized CLI bro-wser*
+
+### NECESSITY {WHY}
+
+- There are numerous tools that bombard the requests on a target page with no or less control
+
+- Needed a tool that can give the full control in the hands of the user
+
+### {WHAT}
+- User can control:
+	+ The request methods:
+		* GET , POST , PUT , OPTIONS , HEAD , DELETE
+		
+	+ Frequency and total count of requests
+
+### Usage {HOW}
+
+```
+``
+
+It generates the output into a file not on a terminal 
+
+- GET
+
+```
+delve -u http://localhost:8080/WebGoat/login -m GET -tr 150 -t 3 -rps 2
+```
+Multiple threads can be used for multiple requests too
+
+- POST
+
+```
+delve -u http://localhost:8080/WebGoat/login -m POST -d '{"username":"webgoat","password":"webgoat"}' -tr 1
+```
+
+PS:remeber to give the data in single quotes in json format
+
+- OPTIONS
+
+```
+delve -u <url> -m OPTIONS -tr 1
+```
+
+- PUT 
+
+```
+delve -u http://localhost:8080/WebGoat/login -m PUT -d '{"data":"value"}' -tr 1
+```
+
+- HEAD
+
+```
+delve -u <url> -m HEAD -tr 1
+```
 
 ---

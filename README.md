@@ -61,3 +61,87 @@ This code appends your desired word to your wordlist at your specified position.
 When there's a rate limit for a certain number of incorrect login attempts and it's reset by a correct login, you can bypass it by creating a wordlist with correct login credentials.
 
 ---
+						
+						
+						
+# 								DELVE
+
+*Your own customized CLI bro-wser*
+
+### NECESSITY {WHY}
+
+- There are numerous tools that bombard the requests on a target page with no or less control
+
+- Needed a tool that can give the full control in the hands of the user
+
+### {WHAT}
+- User can control:
+	+ The request methods:
+		* GET , POST , PUT , OPTIONS , HEAD , DELETE
+		
+	+ Frequency and total count of requests
+
+### Usage {HOW}
+
+```
+usage: delve.py [-h] -u URL [-m METHOD] [-H HEADERS] [-d DATA]
+                [-t NUM_THREADS] [-rps REQUESTS_PER_SECOND]
+                [-tr TOTAL_REQUESTS] [-o OUTPUT_FILE]
+
+HTTP Request Sender Tool
+
+options:
+  -h, --help            show this help message and exit
+  -u URL, --url URL     Target URL
+  -m METHOD, --method METHOD
+                        HTTP method (GET, POST, PUT, DELETE, OPTIONS)
+  -H HEADERS, --headers HEADERS
+                        Headers in JSON format
+  -d DATA, --data DATA  Data in JSON format for POST and PUT requests
+  -t NUM_THREADS, --num-threads NUM_THREADS
+                        Number of threads
+  -rps REQUESTS_PER_SECOND, --requests-per-second REQUESTS_PER_SECOND
+                        Requests per second
+  -tr TOTAL_REQUESTS, --total-requests TOTAL_REQUESTS
+                        Total number of requests across all threads
+  -o OUTPUT_FILE, --output-file OUTPUT_FILE
+                        File to write the output to
+
+```
+
+It generates the output into a file not on a terminal 
+
+- GET
+
+```
+delve -u http://localhost:8080/WebGoat/login -m GET -tr 150 -t 3 -rps 2
+```
+Multiple threads can be used for multiple requests too
+
+- POST
+
+```
+delve -u http://localhost:8080/WebGoat/login -m POST -d '{"username":"webgoat","password":"webgoat"}' -tr 1
+```
+
+PS:remeber to give the data in single quotes in json format
+
+- OPTIONS
+
+```
+delve -u <url> -m OPTIONS -tr 1
+```
+
+- PUT 
+
+```
+delve -u http://localhost:8080/WebGoat/login -m PUT -d '{"data":"value"}' -tr 1
+```
+
+- HEAD
+
+```
+delve -u <url> -m HEAD -tr 1
+```
+
+---
