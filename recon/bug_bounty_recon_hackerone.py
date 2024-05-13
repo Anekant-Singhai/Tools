@@ -1,4 +1,33 @@
 
+
+# Install these:
+# ------------------------------------------------------------------------
+# pip install httpx
+# pip install tld
+# pip install tldextract
+# pip install requests
+# pip install pandas
+# ------------------------------------------------------------------------
+ 
+def chaosAPI(domain, key, opt):
+    url = f"https://dns.projectdiscovery.io/dns/{domain}/subdomains"
+    headers = {'Authorization': key}
+    response = requests.request("GET", url, headers=headers).json()
+    domain = response['domain']
+
+    options = ['default', 'count', 'json']
+
+    if opt in options:
+        if opt == 'default':
+            return response['subdomains']
+        elif opt == 'count':
+            return len(response['subdomains'])
+        elif opt == 'json':
+            return response
+    else:
+        return "Please define an option"
+
+#os.system("rm -r results")
 ############################################################################### UPDATED CODE:
 import pandas as pd
 import re
@@ -10,7 +39,7 @@ os.system("rm -rf results")
 os.system("mkdir results")
 
 data = pd.read_csv(input("The csv file: "))
-key = input("The Chaos API key please , if not you can get it for free on [https://chaos.projectdiscovery.io/#/]: ")
+key = input("your chaosapi key please , If not it's free to make one just go to projectdiscovery's chaos: ")
 options = "default"
 
 print("###################### ALL ELIGIBLES  ###################\n")
@@ -19,33 +48,34 @@ eligible_identifiers_url = data[(data['eligible_for_submission'] == True) & (dat
 eligible_identifiers_other = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'OTHER') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
 eligible_identifiers_code = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'SOURCE_CODE') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
 eligible_identifiers_smart_contracts = data[(data['eligible_for_submission'] == True) & (data['asset_type'] == 'SMART_CONTRACT') & (data['eligible_for_bounty'] == True)]['identifier'].tolist()
+#class reconone:
+def segregate_scope():
+  if eligible_identifiers_url:
+      with open("./results/eligible_urls.txt", "a") as f:
+          for i in eligible_identifiers_url:
+              print(i)
+              f.write(i + "\n")
+  else:
+      print("No eligible identifiers found.")
 
-if eligible_identifiers_url:
-    with open("./results/eligible_urls.txt", "a") as f:
-        for i in eligible_identifiers_url:
-            print(i)
-            f.write(i + "\n")
-else:
-    print("No eligible identifiers found.")
-
-if eligible_identifiers_other:
-    print("----------[OTHERS]-------------------- ")
-    with open("./results/eligible_others.txt", "a") as f:
-        for i in eligible_identifiers_other:
-            print(i)
-            f.write(i + "\n")
-if eligible_identifiers_code:
-    print("----------[CODE REVIEW]---------------")
-    with open("./results/eligible_code.txt", "a") as f:
-        for i in eligible_identifiers_code:
-            print(i)
-            f.write(i + "\n")
-if eligible_identifiers_smart_contracts:
-    print("--------------[SMART CONTRACTS]------------------------")
-    with open("./results/eligible_smart_contracts.txt", "a") as f:
-        for i in eligible_identifiers_smart_contracts:
-            print(i)
-            f.write(i + "\n")
+  if eligible_identifiers_other:
+      print("----------[OTHERS]-------------------- ")
+      with open("./results/eligible_others.txt", "a") as f:
+          for i in eligible_identifiers_other:
+              print(i)
+              f.write(i + "\n")
+  if eligible_identifiers_code:
+      print("----------[CODE REVIEW]---------------")
+      with open("./results/eligible_code.txt", "a") as f:
+          for i in eligible_identifiers_code:
+              print(i)
+              f.write(i + "\n")
+  if eligible_identifiers_smart_contracts:
+      print("--------------[SMART CONTRACTS]------------------------")
+      with open("./results/eligible_smart_contracts.txt", "a") as f:
+          for i in eligible_identifiers_smart_contracts:
+              print(i)
+              f.write(i + "\n")
 print("############### WILDCARDS #################\n")
 
 data
@@ -73,17 +103,30 @@ print("############################### ALL ELIGIBLES: ##########################
 # Process wildcards and add them to the eligible URLs list for further checks
 # eligible_identifiers1 = [extract_domain_from_wildcard(domain) for domain in eligible_identifiers_wildcards]
 # eligible_identifiers_url.extend(eligible_identifiers1)
-print(eligible_identifiers_url)
+print(eligible_identifiers_url,"\n")
+for i in eligible_identifiers_url:
+  print(i)
 print("####################################################################################\n")
 
 # then we extract the domains from the eligible list:
+from tld import get_tld
+from tld.exceptions import TldDomainNotFound
 domains = []
-for url in eligible_identifiers_url: #for loop to create iterations
-    res = get_tld("https://"+url,as_object=True)
-    n = res.fld
-    if n not in domains:
-      print(n)
-      domains.append(n)
+for url in eligible_identifiers_url:
+    try:
+        # Check if the URL starts with 'http://' or 'https://'
+        if url.startswith("http://") or url.startswith("https://"):
+            res = get_tld(url, as_object=True)
+        else:
+            res = get_tld("https://" + url, as_object=True)
+
+        n = res.fld
+        if n not in domains:
+            print(n)
+            domains.append(n)
+    except TldDomainNotFound as e:
+        print(f"Error processing URL: {url} - {e}")
+
 print("domain list: \n",domains)
 
 #NOW WE HAVE:
@@ -160,7 +203,7 @@ subs = []
 print("############################################# SUBDOMAINS: #############################\n")
 for d in active_domains:
     try:
-        subdomains = chaosapi(d, key, options)
+        subdomains = chaosAPI(d, key, options)
 
         for subdomain in subdomains:
             if re.search(r'(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]', subdomain):
@@ -218,6 +261,11 @@ keywords = {
     "sandbox":"./results/subdomains_segregated/sandbox_subdomains.txt",
     "public":"./results/subdomains_segregated/public_subdomains.txt",
     "asset":"./results/subdomains_segregated/asset_subdomains.txt",
+    "mail":"./results/subdomains_segregated/mail_subdomains.txt",
+    "ftp":"./results/subdomains_segregated/ftp_subdomains.txt",
+    "localhost":"./results/subdomains_segregated/localhost_subdomains.txt",
+    "old":"./results/subdomains_segregated/old_subdomains.txt",
+    "chat":"./results/subdomains_segregated/chat_subdomains.txt",
 
 
 
@@ -247,6 +295,8 @@ for subdomain in subdomains:
 
 # Print a message indicating completion
 print("Subdomains segregation completed")
+
+os.system("zip -r '/content/results.zip' '/content/results'")
 
 
 
