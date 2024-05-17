@@ -145,3 +145,53 @@ delve -u <url> -m HEAD -tr 1
 ```
 
 ---
+
+# Data Exfiltration Using ICMP!!
+Requires ROOT!!
+Yes we can exfiltrate the data using ICMP protocol. Here's how :
+Usage:
+```
+python3 exfiltrator.py
+```
+
+It will ask for the Sending and Receiving bits:
+## Sending
+choose `s` option and it will ask for the file to send , just give the filename with path.
+
+## Receiving
+choose `r` option and it will save the file to `out.txt`, though you can change it anyways.
+
+## Why:
+As the firewalls can block various traffics and ports and protocols , who'll suspect the innocent ICMP
+
+#  Remote Command execution using ICMP!!!
+
+DOES `NOT` REQUIRE ROOT!!!
+Yes we can also execute commands using ICMP , Here's how:
+There are 2 files: 
+1. Listener
+2. Executer
+## Executer:
+Usage:
+```
+python3 icmp_executer.py
+```
+It will prompt for :
+- IP : Give the victim's IP
+- Port : Just leave blank {I was drunk that day!!} 
+- Command : You know what to do here...
+- TTL : Just leave blank if don't know what to do
+- ID : It is important to give `12321` as ID or it won't execute {consider as secret key!!}
+PS: you can change the ID as you need in code.
+
+## Listener:
+Usage:
+```
+python3 icmp_listener.py
+```
+It will prompt for interface to listen to ... just give which one you're attacker is connected to.
+and watch.
+
+## Why:
+As the firewalls can block various traffics and ports and protocols , who'll suspect the innocent ICMP
+
